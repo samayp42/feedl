@@ -94,8 +94,8 @@ const InquiryForm: React.FC = () => {
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, logo: 'Logo file size must be less than 5MB' }));
+      if (file.size > 10 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, logo: 'Logo file size must be less than 10MB' }));
         return;
       }
       setFormData(prev => ({ ...prev, logo: file }));
@@ -118,7 +118,7 @@ const InquiryForm: React.FC = () => {
 
       setFormData(prev => ({
         ...prev,
-        productImages: [...prev.productImages, ...validFiles].slice(0, 10), // Limit to 10 images
+        productImages: [...prev.productImages, ...validFiles].slice(0, 5), // Limit to 5 images
       }));
 
       if (errors.productImages) {
@@ -138,15 +138,56 @@ const InquiryForm: React.FC = () => {
     setFormData(prev => ({ ...prev, logo: null }));
   };
 
-  const fileToBase64 = (file: File): Promise<string> => {
+  const compressImage = (file: File, maxWidth: number = 1200, quality: number = 0.7): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Remove data:image/...;base64, prefix
-        const base64 = result.split(',')[1];
-        resolve(base64);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Resize if image is too large
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'));
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to base64 with compression
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Failed to compress image'));
+                return;
+              }
+              const reader = new FileReader();
+              reader.readAsDataURL(blob);
+              reader.onload = () => {
+                const result = reader.result as string;
+                const base64 = result.split(',')[1];
+                resolve(base64);
+              };
+              reader.onerror = error => reject(error);
+            },
+            'image/jpeg',
+            quality
+          );
+        };
+        img.onerror = () => reject(new Error('Failed to load image'));
       };
       reader.onerror = error => reject(error);
     });
@@ -164,20 +205,20 @@ const InquiryForm: React.FC = () => {
     setErrorMessage('');
 
     try {
-      // Convert files to base64
+      // Convert and compress images to base64
       const logoData = formData.logo
         ? {
             name: formData.logo.name,
-            data: await fileToBase64(formData.logo),
-            type: formData.logo.type,
+            data: await compressImage(formData.logo, 800, 0.8),
+            type: 'image/jpeg',
           }
         : undefined;
 
       const productImagesData = await Promise.all(
         formData.productImages.map(async (image) => ({
           name: image.name,
-          data: await fileToBase64(image),
-          type: image.type,
+          data: await compressImage(image, 1200, 0.7),
+          type: 'image/jpeg',
         }))
       );
 
@@ -419,7 +460,7 @@ const InquiryForm: React.FC = () => {
               </div>
             )}
             <div className="text-sm text-[#5A4A4A] mt-1">
-              {formData.productImages.length} image(s) selected (max 10, 10MB per file)
+              {formData.productImages.length} image(s) selected (max 5, 10MB per file)
             </div>
           </div>
 
