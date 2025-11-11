@@ -118,7 +118,7 @@ const InquiryForm: React.FC = () => {
 
       setFormData(prev => ({
         ...prev,
-        productImages: [...prev.productImages, ...validFiles].slice(0, 5), // Limit to 5 images
+        productImages: [...prev.productImages, ...validFiles].slice(0, 3), // Limit to 3 images
       }));
 
       if (errors.productImages) {
@@ -205,11 +205,11 @@ const InquiryForm: React.FC = () => {
     setErrorMessage('');
 
     try {
-      // Convert and compress images to base64
+      // Convert and compress images to base64 (aggressive compression)
       const logoData = formData.logo
         ? {
             name: formData.logo.name,
-            data: await compressImage(formData.logo, 800, 0.8),
+            data: await compressImage(formData.logo, 600, 0.6),
             type: 'image/jpeg',
           }
         : undefined;
@@ -217,7 +217,7 @@ const InquiryForm: React.FC = () => {
       const productImagesData = await Promise.all(
         formData.productImages.map(async (image) => ({
           name: image.name,
-          data: await compressImage(image, 1200, 0.7),
+          data: await compressImage(image, 800, 0.5),
           type: 'image/jpeg',
         }))
       );
@@ -460,7 +460,7 @@ const InquiryForm: React.FC = () => {
               </div>
             )}
             <div className="text-sm text-[#5A4A4A] mt-1">
-              {formData.productImages.length} image(s) selected (max 5, 10MB per file)
+              {formData.productImages.length} image(s) selected (max 3, 10MB per file)
             </div>
           </div>
 
