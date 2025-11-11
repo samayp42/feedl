@@ -24,15 +24,19 @@ app.post('/api/submit-inquiry', async (req, res) => {
   try {
     const { name, email, businessName, domain, businessOverview, logo, productImages } = req.body;
 
-    // Create SMTP transporter
+    // Create SMTP transporter with SSL/TLS
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
+      port: parseInt(process.env.SMTP_PORT || '465'),
+      secure: true, // Use SSL/TLS
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      // Additional options for better compatibility with hosting platforms
+      tls: {
+        rejectUnauthorized: true
+      }
     });
 
     // Prepare attachments
