@@ -56,6 +56,20 @@ textarea {
   padding-right: var(--space-4);
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+}
+
 .text-muted {
   color: var(--text-secondary);
 }
@@ -146,6 +160,14 @@ textarea {
   height: 300px;
 }
 
+/* Better touch targets on mobile */
+@media (max-width: 768px) {
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+}
+
 .floating-decor {
   position: relative;
 }
@@ -153,6 +175,13 @@ textarea {
 .float-item {
   position: absolute;
   will-change: transform, opacity;
+}
+
+/* Hide floating decorations on mobile */
+@media (max-width: 768px) {
+  .float-item {
+    display: none;
+  }
 }
 
 .float-slow {
@@ -640,6 +669,20 @@ textarea {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
+@media (max-width: 768px) {
+  .form-section {
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-section {
+    padding: 1.25rem;
+  }
+}
+
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -757,6 +800,27 @@ textarea {
   background: rgba(220, 38, 38, 1);
   transform: scale(1.1);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Better touch targets on mobile */
+@media (max-width: 768px) {
+  .file-preview-item {
+    width: 100px;
+    height: 100px;
+  }
+
+  .file-preview-item button {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .file-preview-item {
+    width: 90px;
+    height: 90px;
+  }
 }
 
 .form-error {

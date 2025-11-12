@@ -96,11 +96,11 @@ const LandingPage: React.FC = () => {
             Get a full monthly campaign in minutes. <br className="hidden md:block" />
             No agencies. No headaches. Just your brand — consistent, creative, and on-brand, every month.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
-            <a href="#inquiry-form" className="btn btn-primary hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl px-8">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
+            <a href="#inquiry-form" className="btn btn-primary hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl px-8 w-full sm:w-auto text-center">
               Get Your First Campaign
             </a>
-            <a href="#how-it-works" className="btn btn-secondary hover:scale-105 transition-transform duration-200">Know More</a>
+            <a href="#how-it-works" className="btn btn-secondary hover:scale-105 transition-transform duration-200 w-full sm:w-auto text-center">Know More</a>
           </div>
         </div>
       </section>
@@ -275,7 +275,7 @@ const LandingPage: React.FC = () => {
         </div>
         
         <div className="text-center mt-12 md:mt-16">
-          <a href="#inquiry-form" className="btn btn-primary hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl px-8">
+          <a href="#inquiry-form" className="btn btn-primary hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl px-8 w-full sm:w-auto inline-block">
             Get Your First Campaign
           </a>
         </div>
