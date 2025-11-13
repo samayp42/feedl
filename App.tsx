@@ -4,6 +4,7 @@
 */
 
 import React from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import LandingPage from './components/LandingPage';
 import InquiryForm from './components/InquiryForm';
 
@@ -12,6 +13,7 @@ const App: React.FC = () => {
     <div className="min-h-screen">
       <LandingPage />
       <InquiryForm />
+      <Analytics />
     </div>
   );
 };
