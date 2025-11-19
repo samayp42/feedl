@@ -347,10 +347,18 @@ textarea {
 /* Infinite Carousel Styles */
 .carousel-container {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   position: relative;
   margin: 1.5rem 0;
   padding: 2rem 0;
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Gradient fade overlays for carousel edges */
@@ -381,34 +389,15 @@ textarea {
   }
 }
 
-/* Pause carousel on hover */
-.carousel-hover-pause:hover .carousel-track-paired {
-  animation-play-state: paused;
-}
-
-
+/* No CSS animation - handled by JS */
 .carousel-track {
   display: flex;
   width: fit-content;
-  will-change: transform;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  will-change: scroll-position;
 }
 
 .carousel-track-paired {
-  animation: scroll-left 60s linear infinite;
   gap: 0; /* Gap handled by item margin */
-}
-
-/* Calculate: 5 pairs per set, 4 sets = 20 pairs total
-   Move exactly 1/4 (5 pairs = one set) to create seamless loop */
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(calc(-25%));
-  }
 }
 
 .carousel-item-paired {
@@ -535,9 +524,7 @@ textarea {
     gap: 0.75rem;
   }
   
-  .carousel-track-paired {
-    animation-duration: 50s;
-  }
+
   
   .carousel-pair-label {
     padding: 0.4rem 0.75rem;
@@ -563,9 +550,7 @@ textarea {
     gap: 0.5rem;
   }
   
-  .carousel-track-paired {
-    animation-duration: 45s;
-  }
+
   
   .carousel-pair-label {
     padding: 0.35rem 0.6rem;

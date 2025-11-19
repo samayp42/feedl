@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 const feedlLogoUrl = new URL('../assets/feedl.png', import.meta.url).href;
 const headerBgUrl = new URL('../assets/header-bg.jpg', import.meta.url).href;
 
@@ -33,6 +33,8 @@ const imagePairs = [
 
 const LandingPage: React.FC = () => {
   const [logoError, setLogoError] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Preload all images for smooth carousel
   useEffect(() => {
@@ -43,6 +45,40 @@ const LandingPage: React.FC = () => {
       afterImg.src = pair.after;
     });
   }, []);
+
+  // Auto-scroll carousel with increased speed
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    let animationFrameId: number;
+    const scrollSpeed = 1.5; // Increased from implicit ~1px per frame to 1.5px
+
+    const autoScroll = () => {
+      if (!isHovered && carousel) {
+        carousel.scrollLeft += scrollSpeed;
+
+        // Get the width of one set (1/4 of total track width since we have 4 duplicate sets)
+        const track = carousel.querySelector('.carousel-track-paired') as HTMLElement;
+        if (track) {
+          const singleSetWidth = track.scrollWidth / 4;
+
+          // Reset scroll position for infinite loop when we've scrolled past one set
+          if (carousel.scrollLeft >= singleSetWidth) {
+            carousel.scrollLeft = 0;
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(autoScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(autoScroll);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isHovered]);
+
 
   return (
     <div className="w-full landing-root min-h-screen relative">
@@ -64,22 +100,22 @@ const LandingPage: React.FC = () => {
         <div className="container relative z-10">
           {/* Floating decor - typography, color chips, shapes */}
           <div className="floating-decor" aria-hidden="true">
-            <div className="float-item float-slow decor-chip decor-circle accent-teal text-sm" style={{left: '3%', top: '12%'}}>Aa</div>
-            <div className="float-item float-med decor-chip decor-square accent-saffron text-xs" style={{right: '6%', top: '18%'}}>#FFD66B</div>
-            <div className="float-item float-fast decor-chip decor-hex accent-green text-xs" style={{left: '10%', bottom: '20%'}}>#A8E66B</div>
-            <div className="float-item float-med decor-chip decor-circle accent-coral text-sm" style={{right: '10%', bottom: '26%'}}>Aa</div>
-            <div className="float-item float-slow decor-chip decor-square accent-teal text-xs" style={{left: '22%', top: '34%'}}>Serif</div>
-            <div className="float-item float-fast decor-chip decor-hex accent-saffron text-xs" style={{right: '22%', top: '40%'}}>Sans</div>
+            <div className="float-item float-slow decor-chip decor-circle accent-teal text-sm" style={{ left: '3%', top: '12%' }}>Aa</div>
+            <div className="float-item float-med decor-chip decor-square accent-saffron text-xs" style={{ right: '6%', top: '18%' }}>#FFD66B</div>
+            <div className="float-item float-fast decor-chip decor-hex accent-green text-xs" style={{ left: '10%', bottom: '20%' }}>#A8E66B</div>
+            <div className="float-item float-med decor-chip decor-circle accent-coral text-sm" style={{ right: '10%', bottom: '26%' }}>Aa</div>
+            <div className="float-item float-slow decor-chip decor-square accent-teal text-xs" style={{ left: '22%', top: '34%' }}>Serif</div>
+            <div className="float-item float-fast decor-chip decor-hex accent-saffron text-xs" style={{ right: '22%', top: '40%' }}>Sans</div>
           </div>
           {/* Centered Feedl image */}
           <div className="relative w-full flex items-center justify-center mb-8">
             {!logoError ? (
               <div className="logo-container">
-                <img 
-                  src={feedlLogoUrl} 
-                  alt="Feedl" 
-                  className="feedl-logo-img" 
-                  style={{ transform: 'scale(2)' }} 
+                <img
+                  src={feedlLogoUrl}
+                  alt="Feedl"
+                  className="feedl-logo-img"
+                  style={{ transform: 'scale(2)' }}
                   onError={() => setLogoError(true)}
                 />
               </div>
@@ -116,7 +152,7 @@ const LandingPage: React.FC = () => {
               We solve the content creation problem that every small business faces
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {/* Problem Card */}
             <div className="value-card value-card-problem">
@@ -184,13 +220,18 @@ const LandingPage: React.FC = () => {
           <h3 className="section-title text-3xl md:text-4xl text-[#3B3030] mb-3 font-bold">See Feedl in Action</h3>
           <p className="text-[#5A4A4A] text-base md:text-lg font-medium">Real transformations from real brands</p>
         </div>
-        
+
         {/* Gradient overlays for fade effect */}
         <div className="carousel-fade-left"></div>
         <div className="carousel-fade-right"></div>
-        
+
         {/* Paired Before/After Carousel - Moving Left */}
-        <div className="carousel-container carousel-hover-pause">
+        <div
+          ref={carouselRef}
+          className="carousel-container"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <div className="carousel-track carousel-track-paired">
             {/* Duplicate set for seamless loop - 4 sets for smoother transition */}
             {[...imagePairs, ...imagePairs, ...imagePairs, ...imagePairs].map((pair, index) => (
@@ -227,12 +268,12 @@ const LandingPage: React.FC = () => {
           <h3 className="section-title text-3xl md:text-4xl lg:text-5xl font-bold text-[#3B3030] mb-4">How It Works</h3>
           <p className="text-[#5A4A4A] text-lg md:text-xl max-w-2xl mx-auto">Get your monthly campaign in three simple steps</p>
         </div>
-        
+
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
             {/* Connection Line */}
             <div className="hidden md:block absolute top-20 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#E8E1D4] to-transparent"></div>
-            
+
             <div className="step-card-modern group relative">
               <div className="step-number-modern">
                 <span className="step-number-text">1</span>
@@ -245,7 +286,7 @@ const LandingPage: React.FC = () => {
               <h4 className="step-title">Share Your Brand</h4>
               <p className="step-description">Tell us your brand name, overview, logo, and product photos — just once. That's all we need.</p>
             </div>
-            
+
             <div className="step-card-modern group relative">
               <div className="step-number-modern">
                 <span className="step-number-text">2</span>
@@ -258,7 +299,7 @@ const LandingPage: React.FC = () => {
               <h4 className="step-title">We Generate</h4>
               <p className="step-description">Feedl's AI creates 5 high-quality posts with captions, perfectly tailored to your brand. Ready to post.</p>
             </div>
-            
+
             <div className="step-card-modern group relative">
               <div className="step-number-modern">
                 <span className="step-number-text">3</span>
@@ -273,7 +314,7 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="text-center mt-12 md:mt-16">
           <a href="#inquiry-form" className="btn btn-primary hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl px-8 w-full sm:w-auto inline-block">
             Get Your First Campaign
