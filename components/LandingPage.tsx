@@ -35,6 +35,20 @@ const LandingPage: React.FC = () => {
   const [logoError, setLogoError] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePos({ x: 0, y: 0 });
+  };
 
   // Preload all images for smooth carousel
   useEffect(() => {
@@ -81,38 +95,49 @@ const LandingPage: React.FC = () => {
   return (
     <div className="w-full landing-root min-h-screen relative">
       {/* Hero Section with Stunning Animations */}
-      <section className="hero-section">
-        {/* Animated Background Orbs */}
-        <div className="hero-orbs" aria-hidden="true">
+      <section
+        ref={heroRef}
+        className="hero-section"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Animated Background Orbs with Parallax */}
+        <div className="hero-orbs" aria-hidden="true" style={{ transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -20}px)` }}>
           <div className="orb orb-1"></div>
           <div className="orb orb-2"></div>
           <div className="orb orb-3"></div>
         </div>
 
         <div className="container relative z-10">
-          {/* Floating Creative Elements */}
+          {/* Floating Creative Elements with Parallax */}
           <div className="floating-decor" aria-hidden="true">
-            <div className="float-item float-item-1">Aa</div>
-            <div className="float-item float-item-2">#FFD66B</div>
-            <div className="float-item float-item-3">Creative</div>
-            <div className="float-item float-item-4">Design</div>
+            <div className="float-item float-item-1" style={{ transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40}px)` }}>Aa</div>
+            <div className="float-item float-item-2" style={{ transform: `translate(${mousePos.x * -30}px, ${mousePos.y * 30}px)` }}>#FFD66B</div>
+            <div className="float-item float-item-3" style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * -30}px)` }}>Creative</div>
+            <div className="float-item float-item-4" style={{ transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px)` }}>Design</div>
           </div>
 
           {/* Logo with 3D Animation & Particles */}
           <div className="relative w-full flex items-center justify-center mb-8">
             {!logoError ? (
-              <div className="logo-container">
+              <div
+                className="logo-container"
+                style={{
+                  transform: `perspective(1000px) rotateY(${mousePos.x * 15}deg) rotateX(${-mousePos.y * 15}deg) scale3d(1, 1, 1)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
                 {/* Morphing Glow Background */}
                 <div className="logo-glow" aria-hidden="true"></div>
 
                 {/* Particle System */}
                 <div className="logo-particles" aria-hidden="true">
-                  <div className="particle particle-1"></div>
-                  <div className="particle particle-2"></div>
-                  <div className="particle particle-3"></div>
-                  <div className="particle particle-4"></div>
-                  <div className="particle particle-5"></div>
-                  <div className="particle particle-6"></div>
+                  <div className="particle particle-1" style={{ transform: `translate(${mousePos.x * 60}px, ${mousePos.y * 60}px)` }}></div>
+                  <div className="particle particle-2" style={{ transform: `translate(${mousePos.x * -50}px, ${mousePos.y * -50}px)` }}></div>
+                  <div className="particle particle-3" style={{ transform: `translate(${mousePos.x * 40}px, ${mousePos.y * -40}px)` }}></div>
+                  <div className="particle particle-4" style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * 30}px)` }}></div>
+                  <div className="particle particle-5" style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 50}px)` }}></div>
+                  <div className="particle particle-6" style={{ transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -20}px)` }}></div>
                 </div>
 
                 {/* Logo Image with Float Animation */}
@@ -122,6 +147,19 @@ const LandingPage: React.FC = () => {
                     alt="Feedl"
                     className="feedl-logo-img"
                     onError={() => setLogoError(true)}
+                    style={{
+                      filter: `drop-shadow(${mousePos.x * -20}px ${mousePos.y * 20}px 30px rgba(121, 85, 87, 0.4))`
+                    }}
+                  />
+                  {/* Glare Effect */}
+                  <div
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      background: `linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 100%)`,
+                      opacity: Math.max(0, 0.5 - Math.abs(mousePos.x) - Math.abs(mousePos.y)),
+                      transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -20}px)`,
+                      mixBlendMode: 'overlay'
+                    }}
                   />
                 </div>
               </div>
