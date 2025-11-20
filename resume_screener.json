@@ -1,0 +1,222 @@
+{
+    "name": "Resume Analyzer with Google Gemini",
+    "nodes": [
+        {
+            "parameters": {
+                "operation": "read",
+                "sheetId": "YOUR_SHEET_ID",
+                "range": "Sheet1!A2:O"
+            },
+            "id": "ReadSheet",
+            "name": "Read Sheet",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 3,
+            "position": [
+                200,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID"
+            }
+        },
+        {
+            "parameters": {
+                "batchSize": 1
+            },
+            "id": "SplitBatches",
+            "name": "SplitInBatches",
+            "type": "n8n-nodes-base.splitInBatches",
+            "typeVersion": 1,
+            "position": [
+                400,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "fileId": "={{$json[\"Upload Resume\"].match(/id=([a-zA-Z0-9-_]+)/)?.[1]}}",
+                "options": {
+                    "download": true
+                }
+            },
+            "id": "DownloadResume",
+            "name": "Download Resume",
+            "type": "n8n-nodes-base.googleDrive",
+            "typeVersion": 2,
+            "position": [
+                600,
+                300
+            ],
+            "credentials": {
+                "googleDriveOAuth2Api": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID"
+            }
+        },
+        {
+            "parameters": {
+                "functionCode": "// Convert binary data to Base64 string for Gemini\nconst binary = $binary.data;\nreturn [{json:{resumeBase64: binary.data}}];"
+            },
+            "id": "ConvertBinary",
+            "name": "Convert to Base64",
+            "type": "n8n-nodes-base.function",
+            "typeVersion": 2,
+            "position": [
+                800,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gemini-1.5-flash",
+                "input": "={{(() => {const role = $json[\"Which role are you applying for?\"]; return `You are an AI recruiter. Summarize this candidate's resume in 3 sentences and provide a suitability score (0–100) for the role: ${role}. Respond strictly in JSON: {\"summary\":\"...\",\"score\":number}`;})()}}",
+                "imageInput": "={{$node[\"Convert to Base64\"].json.resumeBase64}}",
+                "imageInputType": "base64"
+            },
+            "id": "AnalyzeGemini",
+            "name": "Analyze with Gemini",
+            "type": "n8n-nodes-base.googleGemini",
+            "typeVersion": 1,
+            "position": [
+                1000,
+                300
+            ],
+            "credentials": {
+                "googleGeminiApi": "YOUR_GEMINI_CREDENTIAL_ID"
+            }
+        },
+        {
+            "parameters": {
+                "functionCode": "// Parse Gemini JSON output\nlet ai=$json.output_text||$json.output||'';\ntry{const parsed=JSON.parse(ai);return [{json:{summary:parsed.summary||'',score:parsed.score||''}}];}catch(e){return [{json:{summary:ai,score:'Error'}}];}"
+            },
+            "id": "ParseGemini",
+            "name": "Parse Gemini Response",
+            "type": "n8n-nodes-base.function",
+            "typeVersion": 2,
+            "position": [
+                1200,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "update",
+                "sheetId": "YOUR_SHEET_ID",
+                "range": "Sheet1!N2:O",
+                "key": "Email",
+                "fieldsToMatchOn": [
+                    "Email"
+                ],
+                "options": {
+                    "valueInputMode": "USER_ENTERED"
+                },
+                "data": "={{[{values:[[$json.summary,$json.score]]}]}}"
+            },
+            "id": "WriteSheet",
+            "name": "Write Summary & Score",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 3,
+            "position": [
+                1400,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID"
+            }
+        },
+        {
+            "parameters": {
+                "continue": true
+            },
+            "id": "NextBatch",
+            "name": "Next Batch",
+            "type": "n8n-nodes-base.noOp",
+            "typeVersion": 1,
+            "position": [
+                1000,
+                500
+            ]
+        }
+    ],
+    "connections": {
+        "Read Sheet": {
+            "main": [
+                [
+                    {
+                        "node": "SplitInBatches",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "SplitInBatches": {
+            "main": [
+                [
+                    {
+                        "node": "DownloadResume",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "DownloadResume": {
+            "main": [
+                [
+                    {
+                        "node": "Convert to Base64",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Convert to Base64": {
+            "main": [
+                [
+                    {
+                        "node": "Analyze with Gemini",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Analyze with Gemini": {
+            "main": [
+                [
+                    {
+                        "node": "Parse Gemini Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Parse Gemini Response": {
+            "main": [
+                [
+                    {
+                        "node": "Write Summary & Score",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Write Summary & Score": {
+            "main": [
+                [
+                    {
+                        "node": "SplitInBatches",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {
+        "executionOrder": "v1"
+    }
+}
