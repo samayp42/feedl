@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-const feedlLogoUrl = new URL('../assets/feedl.png', import.meta.url).href;
 const headerBgUrl = new URL('../assets/header-bg.jpg', import.meta.url).href;
 
 // Import all before and after images as pairs
@@ -108,6 +107,46 @@ const LandingPage: React.FC = () => {
           <div className="orb orb-3"></div>
         </div>
 
+        {/* Floating Social Icons - Flying Elements */}
+        <div className="floating-icons-container" aria-hidden="true">
+          <div className="floating-icon icon-heart">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+          </div>
+          <div className="floating-icon icon-star">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+          </div>
+          <div className="floating-icon icon-play">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+          </div>
+          <div className="floating-icon icon-send">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
+          </div>
+          <div className="floating-icon icon-bookmark">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z" /></svg>
+          </div>
+        </div>
+
+        {/* Rotating Badge - Constantly Replaying */}
+        <div className="rotating-badge">
+          <div className="badge-text">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+              <defs>
+                <path id="circle" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+              </defs>
+              <text fontSize="11.5" fontWeight="bold" letterSpacing="2">
+                <textPath xlinkHref="#circle">
+                  FRESH CONTENT • EVERY MONTH •
+                </textPath>
+              </text>
+            </svg>
+          </div>
+          <div className="badge-center">
+            <svg className="w-5 h-5 text-neutral-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+        </div>
+
         <div className="container relative z-10">
           {/* Floating Creative Elements with Parallax */}
           <div className="floating-decor" aria-hidden="true">
@@ -142,15 +181,13 @@ const LandingPage: React.FC = () => {
 
                 {/* Logo Image with Float Animation */}
                 <div className="logo-wrapper">
-                  <img
-                    src={feedlLogoUrl}
-                    alt="Feedl"
-                    className="feedl-logo-img"
-                    onError={() => setLogoError(true)}
-                    style={{
-                      filter: `drop-shadow(${mousePos.x * -20}px ${mousePos.y * 20}px 30px rgba(121, 85, 87, 0.4))`
-                    }}
-                  />
+                  <h1 className="feedl-logo-text">
+                    {'Feedl'.split('').map((char, index) => (
+                      <span key={index} className="feedl-char" style={{ animationDelay: `${index * 0.1}s` }}>
+                        {char}
+                      </span>
+                    ))}
+                  </h1>
                   {/* Glare Effect */}
                   <div
                     className="absolute inset-0 rounded-full pointer-events-none"
@@ -170,13 +207,13 @@ const LandingPage: React.FC = () => {
             )}
           </div>
 
-          <h1 className="hero-title text-4xl md:text-6xl font-extrabold tracking-tight text-center mb-6 animate-fade-in-up">
-            Your Brand's Creative Feed
+          <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-center mb-8 animate-fade-in-up leading-tight">
+            Get a full monthly <br className="hidden md:block" /> campaign in minutes.
           </h1>
 
-          <p className="text-center text-lg md:text-xl mt-2 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: 'var(--color-neutral-700)' }}>
-            Get a full monthly campaign in minutes. <br className="hidden md:block" />
-            No agencies. No headaches. Just your brand — <span className="accent-text">consistent, creative, and on-brand</span>, every month.
+          <p className="text-center text-lg md:text-xl mt-4 mb-10 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: 'var(--color-neutral-700)' }}>
+            <span className="font-bold text-neutral-800">No agencies. No headaches.</span> Just your brand — <br className="hidden md:block" />
+            <span className="accent-text text-2xl">consistent, creative, and on-brand</span>, every month.
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
@@ -280,6 +317,8 @@ const LandingPage: React.FC = () => {
           className="carousel-container"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={() => setIsHovered(true)}
+          onTouchEnd={() => setIsHovered(false)}
         >
           <div className="carousel-track carousel-track-paired">
             {/* Duplicate set for seamless loop */}
