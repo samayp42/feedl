@@ -4,6 +4,8 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import MagneticButton from './MagneticButton';
+import WaitlistForm from './WaitlistForm';
 const headerBgUrl = new URL('../assets/header-bg.jpg', import.meta.url).href;
 
 // Import all before and after images as pairs
@@ -21,7 +23,7 @@ const imagePairs = [
     after: new URL('../assets/after3.png', import.meta.url).href,
   },
   {
-    before: new URL('../assets/before4.JPG', import.meta.url).href,
+    before: new URL('../assets/before4.png', import.meta.url).href,
     after: new URL('../assets/after4.png', import.meta.url).href,
   },
   {
@@ -34,6 +36,22 @@ const LandingPage: React.FC = () => {
   const [logoError, setLogoError] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
 
@@ -93,6 +111,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="w-full landing-root min-h-screen relative">
+      <div className="grain-overlay" />
       {/* Hero Section with Stunning Animations */}
       <section
         ref={heroRef}
@@ -217,18 +236,22 @@ const LandingPage: React.FC = () => {
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
-            <a href="#inquiry-form" className="btn btn-primary">
-              Get Your First Campaign
+            <a href="#inquiry-form">
+              <MagneticButton className="btn btn-primary">
+                Get Your First Campaign
+              </MagneticButton>
             </a>
-            <a href="#how-it-works" className="btn btn-secondary">
-              Know More
+            <a href="#how-it-works">
+              <MagneticButton className="btn btn-secondary">
+                Know More
+              </MagneticButton>
             </a>
           </div>
         </div>
       </section>
 
       {/* Problem, Solution, Promise Section */}
-      <section className="container py-16 md:py-24">
+      <section className="container py-16 md:py-24 reveal">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="section-title text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
@@ -300,8 +323,40 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Viral Marquee Section */}
+      <div className="marquee-container reveal">
+        <div className="marquee-content">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="marquee-item">
+              <span>Viral Content</span>
+              <span>•</span>
+              <span>Zero Effort</span>
+              <span>•</span>
+              <span>Premium Design</span>
+              <span>•</span>
+              <span>Consistent Growth</span>
+              <span>•</span>
+            </div>
+          ))}
+        </div>
+        <div className="marquee-content" aria-hidden="true">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="marquee-item">
+              <span>Viral Content</span>
+              <span>•</span>
+              <span>Zero Effort</span>
+              <span>•</span>
+              <span>Premium Design</span>
+              <span>•</span>
+              <span>Consistent Growth</span>
+              <span>•</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Before / After Infinite Carousel */}
-      <section className="w-full py-12 md:py-16 overflow-hidden relative" style={{ background: 'linear-gradient(to bottom, transparent, rgba(245, 239, 228, 0.25), transparent)' }}>
+      <section className="w-full py-12 md:py-16 overflow-hidden relative reveal" style={{ background: 'linear-gradient(to bottom, transparent, rgba(245, 239, 228, 0.25), transparent)' }}>
         <div className="mb-8 text-center">
           <h3 className="section-title text-3xl md:text-4xl mb-3 font-bold">See Feedl in Action</h3>
           <p className="text-base md:text-lg font-medium" style={{ color: 'var(--color-neutral-700)' }}>Real transformations from real brands</p>
@@ -351,7 +406,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* How it Works */}
-      <section id="how-it-works" className="container py-16 md:py-24">
+      <section id="how-it-works" className="container py-16 md:py-24 reveal">
         <div className="text-center mb-12 md:mb-16">
           <h3 className="section-title text-3xl md:text-4xl lg:text-5xl font-bold mb-4">How It Works</h3>
           <p className="text-lg md:text-xl max-w-2xl mx-auto" style={{ color: 'var(--color-neutral-700)' }}>Get your monthly campaign in three simple steps</p>
@@ -401,11 +456,16 @@ const LandingPage: React.FC = () => {
         </div>
 
         <div className="text-center mt-12 md:mt-16">
-          <a href="#inquiry-form" className="btn btn-primary">
-            Get Your First Campaign
+          <a href="#inquiry-form">
+            <MagneticButton className="btn btn-primary">
+              Get Your First Campaign
+            </MagneticButton>
           </a>
         </div>
       </section>
+
+      {/* Waitlist Form */}
+      <WaitlistForm />
     </div>
   );
 };

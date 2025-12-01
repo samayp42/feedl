@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UploadIcon, XMarkIcon } from './icons';
 
 interface FormData {
@@ -26,6 +26,23 @@ interface FormErrors {
 }
 
 const InquiryForm: React.FC = () => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -208,10 +225,10 @@ const InquiryForm: React.FC = () => {
       // Convert and compress images to base64 (aggressive compression)
       const logoData = formData.logo
         ? {
-            name: formData.logo.name,
-            data: await compressImage(formData.logo, 600, 0.6),
-            type: 'image/jpeg',
-          }
+          name: formData.logo.name,
+          data: await compressImage(formData.logo, 600, 0.6),
+          type: 'image/jpeg',
+        }
         : undefined;
 
       const productImagesData = await Promise.all(
@@ -287,7 +304,7 @@ const InquiryForm: React.FC = () => {
   };
 
   return (
-    <section id="inquiry-form" className="container py-12 md:py-16">
+    <section id="inquiry-form" className="container py-12 md:py-16 reveal">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="section-title text-3xl md:text-4xl text-[#3B3030] mb-4 font-bold">Get Your First Campaign</h2>
