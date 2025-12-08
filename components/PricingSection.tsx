@@ -20,8 +20,8 @@ interface PricingTier {
 
 const pricingTiers: PricingTier[] = [
     {
-        id: 'free',
-        name: 'Free',
+        id: 'taste',
+        name: 'Taste',
         priceUSD: 0,
         priceINR: 0,
         description: 'Try Feedl with no commitment',
@@ -36,8 +36,8 @@ const pricingTiers: PricingTier[] = [
         cta: 'Start Free'
     },
     {
-        id: 'starter',
-        name: 'Starter',
+        id: 'feast',
+        name: 'Feast',
         priceUSD: 29,
         priceINR: 899,
         description: 'Perfect for small businesses',
@@ -53,8 +53,8 @@ const pricingTiers: PricingTier[] = [
         popular: true
     },
     {
-        id: 'agency',
-        name: 'Agency',
+        id: 'banquet',
+        name: 'Banquet',
         priceUSD: 79,
         priceINR: 2499,
         description: 'For agencies & power users',
@@ -133,7 +133,7 @@ const PricingSection: React.FC = () => {
 
                             <div className="pricing-credits">
                                 {tier.credits.toLocaleString()} credits
-                                {tier.id !== 'free' && ' per month'}
+                                {tier.id !== 'taste' && ' per month'}
                             </div>
 
                             <ul className="pricing-features">
