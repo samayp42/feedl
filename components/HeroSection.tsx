@@ -1,9 +1,10 @@
 /**
- * Hero Section - Product-focused with demo video
- * Updated: Using actual demo video
+ * Hero Section - Product-focused with animated workflow visualization
+ * Shows how Feedl transforms raw photos into beautiful social posts
  */
 
 import React from 'react';
+import HeroAnimation from './HeroAnimation';
 
 const TOOL_URL = 'https://feedlmain.vercel.app'; // Main tool URL
 
@@ -55,31 +56,10 @@ const HeroSection: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Right Column - Demo Video */}
+                {/* Right Column - Animated Workflow Visualization */}
                 <div className="hero-new-visual">
                     <div className="hero-demo-frame">
-                        <div className="hero-demo-video">
-                            <video
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="demo-video"
-                            >
-                                <source src="/assets/demo.MP4" type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-
-                        {/* Floating elements around demo */}
-                        <div className="hero-demo-float hero-demo-float-1">
-                            <span className="float-emoji">✨</span>
-                            <span>AI Magic</span>
-                        </div>
-                        <div className="hero-demo-float hero-demo-float-2">
-                            <span className="float-emoji">📱</span>
-                            <span>Ready to Post</span>
-                        </div>
+                        <HeroAnimation />
                     </div>
                 </div>
             </div>
