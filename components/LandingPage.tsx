@@ -6,36 +6,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MagneticButton from './MagneticButton';
 import WaitlistForm from './WaitlistForm';
-const headerBgUrl = new URL('../assets/header-bg.jpg', import.meta.url).href;
+import PortfolioShowcase from './PortfolioShowcase';
 
-// Import all before and after images as pairs
-const imagePairs = [
-  {
-    before: new URL('../assets/before.JPG', import.meta.url).href,
-    after: new URL('../assets/after.png', import.meta.url).href,
-  },
-  {
-    before: new URL('../assets/before2.JPG', import.meta.url).href,
-    after: new URL('../assets/after2.png', import.meta.url).href,
-  },
-  {
-    before: new URL('../assets/before3.JPG', import.meta.url).href,
-    after: new URL('../assets/after3.png', import.meta.url).href,
-  },
-  {
-    before: new URL('../assets/before4.png', import.meta.url).href,
-    after: new URL('../assets/after4.png', import.meta.url).href,
-  },
-  {
-    before: new URL('../assets/before5.JPG', import.meta.url).href,
-    after: new URL('../assets/after5.png', import.meta.url).href,
-  },
-];
+
+
 
 const LandingPage: React.FC = () => {
   const [logoError, setLogoError] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -67,46 +44,7 @@ const LandingPage: React.FC = () => {
     setMousePos({ x: 0, y: 0 });
   };
 
-  // Preload all images for smooth carousel
-  useEffect(() => {
-    imagePairs.forEach(pair => {
-      const beforeImg = new Image();
-      beforeImg.src = pair.before;
-      const afterImg = new Image();
-      afterImg.src = pair.after;
-    });
-  }, []);
 
-  // Auto-scroll carousel with increased speed
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    let animationFrameId: number;
-    const scrollSpeed = 1.5;
-
-    const autoScroll = () => {
-      if (!isHovered && carousel) {
-        carousel.scrollLeft += scrollSpeed;
-
-        const track = carousel.querySelector('.carousel-track-paired') as HTMLElement;
-        if (track) {
-          const singleSetWidth = track.scrollWidth / 4;
-
-          if (carousel.scrollLeft >= singleSetWidth) {
-            carousel.scrollLeft = 0;
-          }
-        }
-      }
-      animationFrameId = requestAnimationFrame(autoScroll);
-    };
-
-    animationFrameId = requestAnimationFrame(autoScroll);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [isHovered]);
 
 
   return (
@@ -154,7 +92,7 @@ const LandingPage: React.FC = () => {
               </defs>
               <text fontSize="11.5" fontWeight="bold" letterSpacing="2">
                 <textPath xlinkHref="#circle">
-                  FRESH CONTENT • EVERY MONTH •
+                  FRESH CONTENT • EVERY MONTH
                 </textPath>
               </text>
             </svg>
@@ -227,12 +165,12 @@ const LandingPage: React.FC = () => {
           </div>
 
           <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-center mb-8 animate-fade-in-up leading-tight">
-            Get a full monthly <br className="hidden md:block" /> campaign in minutes.
+            Your entire month of content, <br className="hidden md:block" /> sorted in minutes.
           </h1>
 
           <p className="text-center text-lg md:text-xl mt-4 mb-10 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-100" style={{ color: 'var(--color-neutral-700)' }}>
-            <span className="font-bold text-neutral-800">No agencies. No headaches.</span> Just your brand — <br className="hidden md:block" />
-            <span className="accent-text text-2xl">consistent, creative, and on-brand</span>, every month.
+            <span className="font-bold text-neutral-800">Forget the agency fees. Skip the stress.</span> <br className="hidden md:block" />
+            Just your brand, <span className="accent-text text-2xl">consistent and creative</span>, every single month.
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
@@ -276,9 +214,9 @@ const LandingPage: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h3 className="value-card-title">Content Creation is Hard</h3>
+              <h3 className="value-card-title">Struggling to Keep Up?</h3>
               <p className="value-card-description">
-                Creating social media content is <strong style={{ color: '#DC2626' }}>time-consuming, inconsistent, and expensive</strong>. Most small businesses post irregularly — not because they don't care, but because they don't have time.
+                Creating social media content is <strong style={{ color: '#DC2626' }}>time-consuming</strong>. You want to be consistent, but running a business gets in the way. We get it.
               </p>
             </div>
 
@@ -295,9 +233,9 @@ const LandingPage: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="value-card-title">Full Campaign in Minutes</h3>
+              <h3 className="value-card-title">Done for You, Instantly</h3>
               <p className="value-card-description">
-                Feedl gives you a <strong style={{ color: '#059669' }}>full monthly campaign in minutes</strong>. Share your brand details once — we'll generate 5 high-quality posts with captions, ready to post.
+                Feedl gives you a <strong style={{ color: '#059669' }}>full monthly campaign instantly</strong>. Share your brand details once, and we'll generate 5 high-quality posts with captions, ready for you.
               </p>
             </div>
 
@@ -314,9 +252,9 @@ const LandingPage: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="value-card-title">No Agencies. No Headaches.</h3>
+              <h3 className="value-card-title">Simple & Stress-Free</h3>
               <p className="value-card-description">
-                Just your brand — <strong style={{ color: 'var(--color-primary)' }}>consistent, creative, and on-brand</strong>, every month. No contracts, no meetings, no hassle.
+                Just your brand, <strong style={{ color: 'var(--color-primary)' }}>consistent and creative</strong>, every month. No contracts, no meetings, no hassle.
               </p>
             </div>
           </div>
@@ -328,13 +266,13 @@ const LandingPage: React.FC = () => {
         <div className="marquee-content">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="marquee-item">
-              <span>Viral Content</span>
+              <span>Beautiful Designs</span>
               <span>•</span>
-              <span>Zero Effort</span>
+              <span>Authentic Growth</span>
               <span>•</span>
-              <span>Premium Design</span>
+              <span>Effortless Consistency</span>
               <span>•</span>
-              <span>Consistent Growth</span>
+              <span>Your Brand Voice</span>
               <span>•</span>
             </div>
           ))}
@@ -342,68 +280,21 @@ const LandingPage: React.FC = () => {
         <div className="marquee-content" aria-hidden="true">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="marquee-item">
-              <span>Viral Content</span>
+              <span>Beautiful Designs</span>
               <span>•</span>
-              <span>Zero Effort</span>
+              <span>Authentic Growth</span>
               <span>•</span>
-              <span>Premium Design</span>
+              <span>Effortless Consistency</span>
               <span>•</span>
-              <span>Consistent Growth</span>
+              <span>Your Brand Voice</span>
               <span>•</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Before / After Infinite Carousel */}
-      <section className="w-full py-12 md:py-16 overflow-hidden relative reveal" style={{ background: 'linear-gradient(to bottom, transparent, rgba(245, 239, 228, 0.25), transparent)' }}>
-        <div className="mb-8 text-center">
-          <h3 className="section-title text-3xl md:text-4xl mb-3 font-bold">See Feedl in Action</h3>
-          <p className="text-base md:text-lg font-medium" style={{ color: 'var(--color-neutral-700)' }}>Real transformations from real brands</p>
-        </div>
-
-        {/* Gradient overlays for fade effect */}
-        <div className="carousel-fade-left"></div>
-        <div className="carousel-fade-right"></div>
-
-        {/* Paired Before/After Carousel */}
-        <div
-          ref={carouselRef}
-          className="carousel-container"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onTouchStart={() => setIsHovered(true)}
-          onTouchEnd={() => setIsHovered(false)}
-        >
-          <div className="carousel-track carousel-track-paired">
-            {/* Duplicate set for seamless loop */}
-            {[...imagePairs, ...imagePairs, ...imagePairs, ...imagePairs].map((pair, index) => (
-              <div key={`pair-${index}`} className="carousel-item-paired">
-                <div className="carousel-pair-container">
-                  <div className="carousel-pair-image">
-                    <div className="carousel-pair-label carousel-pair-label-before">Before</div>
-                    <img
-                      src={pair.before}
-                      alt={`Before transformation ${(index % imagePairs.length) + 1}`}
-                      className="carousel-image"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="carousel-pair-image">
-                    <div className="carousel-pair-label carousel-pair-label-after">After</div>
-                    <img
-                      src={pair.after}
-                      alt={`After transformation ${(index % imagePairs.length) + 1}`}
-                      className="carousel-image"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Before / After Portfolio Showcase */}
+      <PortfolioShowcase />
 
       {/* How it Works */}
       <section id="how-it-works" className="container py-16 md:py-24 reveal">
@@ -424,7 +315,7 @@ const LandingPage: React.FC = () => {
                 </svg>
               </div>
               <h4 className="step-title">Share Your Brand</h4>
-              <p className="step-description">Tell us your brand name, overview, logo, and product photos — just once. That's all we need.</p>
+              <p className="step-description">Tell us your brand name, overview, logo, and product photos, just once. That's all we need.</p>
             </div>
 
             <div className="step-card-modern group relative">
@@ -450,7 +341,7 @@ const LandingPage: React.FC = () => {
                 </svg>
               </div>
               <h4 className="step-title">Post & Repeat</h4>
-              <p className="step-description">Download your campaign and get a fresh one every month — automatically. Set it and forget it.</p>
+              <p className="step-description">Download your campaign and get a fresh one every month, automatically. Set it and forget it.</p>
             </div>
           </div>
         </div>

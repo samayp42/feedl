@@ -31,7 +31,7 @@ const WaitlistForm: React.FC = () => {
     };
 
     return (
-        <section id="inquiry-form" className="container py-16 md:py-24 reveal">
+        <section id="waitlist-form" className="container py-16 md:py-24 reveal">
             <div className="max-w-3xl mx-auto text-center">
                 <div className="mb-8">
                     <h2 className="section-title text-3xl md:text-4xl lg:text-5xl font-bold mb-4">

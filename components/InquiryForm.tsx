@@ -323,7 +323,7 @@ const InquiryForm: React.FC = () => {
                 <span className="text-2xl">🎉</span>
                 <h3 className="text-lg font-bold">Thank you for your interest!</h3>
               </div>
-              <p>We'll be in touch soon to discuss your first campaign — free preview.</p>
+              <p>We'll be in touch soon to discuss your first campaign, free preview.</p>
             </div>
           )}
 
