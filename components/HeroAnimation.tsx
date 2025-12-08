@@ -108,14 +108,12 @@ const HeroAnimation: React.FC = () => {
                     {/* Center nucleus */}
                     <div className="core-nucleus">
                         <div className="nucleus-glass">
-                            <div className="nucleus-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                                    <path d="M2 17l10 5 10-5" />
-                                    <path d="M2 12l10 5 10-5" />
+                            <div className="nucleus-icon feedl-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <path d="M6 4h12M6 4v16M6 12h8" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
-                            <span className="nucleus-label">AI</span>
+                            <span className="nucleus-label">Feedl</span>
                         </div>
                         <div className="nucleus-pulse"></div>
                     </div>
