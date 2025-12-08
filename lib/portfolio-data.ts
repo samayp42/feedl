@@ -24,7 +24,7 @@ export const portfolioItems: PortfolioItem[] = [
     },
     {
         id: '3',
-        before: new URL('../assets/before3.jpg', import.meta.url).href,
+        before: new URL('../assets/before3.JPG', import.meta.url).href,
         after: new URL('../assets/after3.png', import.meta.url).href,
         title: 'Brand Transformation 3',
         category: 'Social Media'

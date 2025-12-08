@@ -71,7 +71,7 @@ const pricingTiers: PricingTier[] = [
 ];
 
 const PricingSection: React.FC = () => {
-    const [currency, setCurrency] = useState<'USD' | 'INR'>('USD');
+    const [currency, setCurrency] = useState<'USD' | 'INR'>('INR');
 
     const formatPrice = (tier: PricingTier) => {
         if (tier.priceUSD === 0) return 'Free';
